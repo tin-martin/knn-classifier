@@ -1,2 +1,2 @@
-# knn-classifier
-A basic implementation of k-nearest neighbours for classification and regression problems.
+# k-nearest-neighbours-model
+A basic implementation of k-nearest neighbours (KNN) for classification and regression problems.
