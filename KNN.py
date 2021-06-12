@@ -20,7 +20,7 @@ class KNN_model():
 		for i in range(len(self.X)):
 			self.dist.append(( self.Y[i], euclidian_distance(self.input,self.X[i])))
 		self.dist.sort(key=lambda tup: tup[1])
-	def predict(self):https://martin-tin.medium.com/k-nearest-neighbours-knn-a9f8ba09cb8b
+	def predict(self):
 		self.knn = []
 		for i in range(n_neighbours):
 			self.knn.append(self.dist[0][i])
@@ -41,17 +41,21 @@ input = [0,1],[0,1]
 model_type = 'regression'
 
 preds = []
-def main():
-	#predicting multiple inputs	
+
+def NearestNeighbours(n_neighbours, X, Y, input, model_type):
+	preds = []
+	
 	for i in range(len(input)):
 		selected_input = input [i]
 		model = KNN_model(n_neighbours,X,Y,selected_input, model_type)
 		model.find_neighbours()
 		preds.append(model.predict())
+	return preds
 
-main()
+	
+predictions = NearestNeighbours( 1, ([0,1],[0,0]), [1,1], ([0,1],[0,1]),'regression')
 #print predictions
-print(preds)
+print(predictions)
 
 
 
