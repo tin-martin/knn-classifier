@@ -1,5 +1,4 @@
 import math
-from collections import Counter
 
 def euclidian_distance(a, b):
 	#implementation of euclidian distance formula between points a and b
@@ -14,46 +13,53 @@ class KNN_model():
 		self.X = X
 		self.Y = Y
 		self.input = input
-	def find_neighbours(self):
+		self.model_type = model_type
+	def fit(self):
 		#predict a single input
 		self.dist = []
 		for i in range(len(self.X)):
-			self.dist.append(( self.Y[i], euclidian_distance(self.input,self.X[i])))
-		self.dist.sort(key=lambda tup: tup[1])
+			self.dist.append(['X', euclidian_distance(self.input,self.X[i])])
+		
+		for i in range(len(self.Y)):
+			self.dist.append(['Y', euclidian_distance(self.input,self.Y[i])])
+		self.dist.sort(key=lambda x: x[1])
+
 	def predict(self):
 		self.knn = []
-		for i in range(n_neighbours):
-			self.knn.append(self.dist[0][i])
+		self.model_type
 		#if regression, return mean of knn
-		if model_type == 'regression':
+		if self.model_type == 'regression':
+			for i in range(n_neighbours):
+				self.knn.append(self.dist[i][1])
 			return sum(self.knn)/len(self.knn)
-		#if classifcation, return mode of knn
-		if model_type == 'classification':
-			c = Counter(self.knn)
-			dict_items = {i:self.knn[i] for i in range(len(self.knn))} 
-			return [i for i in c if i == c.most_common(1)]
+		#if classification, return mode of knn
+		if self.model_type == 'classification':
+			self.knn = [i[0] for i in self.dist]
 
+			for i in range(n_neighbours):
+				self.knn.append(self.dist[i][0])
+			dict_items = [i[0] for i in self.knn]
+			return max(set(dict_items), key = dict_items.count)
+			
 #defining key information
 n_neighbours = 1
-X = [0,1],[0,0]
-Y = [1,1]
-input = [0,1],[0,1]
-model_type = 'regression'
+X = [[2,2],[2,2]]
+Y = [[1,1],[1,1],[1,1]]
+input = [[0,0],[0,0]]
 
-preds = []
 
-def NearestNeighbours(n_neighbours, X, Y, input, model_type):
+
+def NearestNeighbours(n_neighbours, X, Y, input, mode_type):
 	preds = []
-	
 	for i in range(len(input)):
 		selected_input = input [i]
-		model = KNN_model(n_neighbours,X,Y,selected_input, model_type)
-		model.find_neighbours()
+		model = KNN_model(n_neighbours,X,Y,selected_input, mode_type)
+		model.fit()
 		preds.append(model.predict())
 	return preds
 
 	
-predictions = NearestNeighbours( 1, ([0,1],[0,0]), [1,1], ([0,1],[0,1]),'regression')
+predictions = NearestNeighbours(n_neighbours, X, Y, input,'classification')
 #print predictions
 print(predictions)
 
